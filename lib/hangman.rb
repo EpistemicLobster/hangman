@@ -16,6 +16,7 @@ module Drawings
               "|  /|\\ \n| / | \\\n|   |\n|  / \\\n| /   \\\n|\n|______".freeze
 end
 
+# Fetch random word in range of 5 to 12 characters from text file
 class Word
   def initialize
     @word = fetch_word
@@ -33,7 +34,7 @@ class Word
   end
 end
 
-
+# load player attributes
 class Player
   def initialize(player)
     @player = player
@@ -44,6 +45,7 @@ class Player
   attr_accessor :guess, :guesses
 end
 
+# main game logic
 class Game
   include Drawings
 
@@ -64,7 +66,6 @@ class Game
     puts "\nGuesses: #{player.guesses.join(' | ')}\n "
     puts "Guesses Remaining: #{guesses_remaining}\n "
     hangman
-    puts "Please make a guess by entering a letter. Or enter 'save' to save the game."
     check_win
   end
 
@@ -88,11 +89,13 @@ class Game
   end
 
   def make_guess
+    puts "Please make a guess by entering a letter. Or enter 'save' to save the game."
     @player.guess = gets.chomp.downcase
     @player.guess == 'save' ? save_game : @player.guess
-    if @player.guess == 'exit'
-       @guesses_remaining = 0
-    elsif @player.guess == 'continue'
+    case player.guess
+    when 'exit'
+      @guesses_remaining = 0
+    when 'continue'
       puts 'Please make a guess by entering a letter: '
       @player.guess = gets.chomp.downcase
       invalid_entry
@@ -103,7 +106,7 @@ class Game
 
   def invalid_entry
     while player.guess.match?(/[^a-zA-Z]/) || player.guess.length > 1
-      puts "Invalid Entry - Please try again: "
+      puts 'Invalid Entry - Please try again: '
       @player.guess = gets.chomp.downcase
     end
     while player.guesses.include?(player.guess)
@@ -135,10 +138,10 @@ class Game
   end
 
   def check_win
-    if board.none?('_')
-      @guesses_remaining = 0
-      @win_state = true
-    end
+    return unless board.none?('_')
+
+    @guesses_remaining = 0
+    @win_state = true
   end
 
   def save_game
@@ -149,11 +152,13 @@ class Game
   end
 end
 
+# Gameplay
 class Play
   def self.game
     game = saved_or_new
+    puts game.hidden
     game.show_board
-    while game.guesses_remaining > 0 
+    while game.guesses_remaining.positive?
       game.make_guess
       game.evaluate_guess
       game.show_board
