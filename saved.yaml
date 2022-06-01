@@ -1,0 +1,35 @@
+--- !ruby/object:Game
+player: !ruby/object:Player
+  player: player
+  guess: save
+  guesses:
+  - i
+  - m
+  - n
+  - o
+  - u
+  - p
+hidden:
+- a
+- n
+- a
+- l
+- y
+- t
+- i
+- c
+- a
+- l
+guesses_remaining: 2
+board:
+- _
+- n
+- _
+- _
+- _
+- _
+- i
+- _
+- _
+- _
+win_state: false
