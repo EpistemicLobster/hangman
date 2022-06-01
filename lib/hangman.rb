@@ -2,36 +2,34 @@ require 'pry-byebug'
 require 'yaml'
 
 module Drawings
-  SIX_EMPTY = "⸻\n|   | \n|   ╽\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|______"
-  FIVE_HEAD =  "⸻\n|   | \n|   ╽\n|  ---\n| |   |\n|  ---\n|\n|\n|\n|\n|\n|\n|\n|______"
+  SIX_EMPTY = "⸻\n|   | \n|   ╽\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|______".freeze
+  FIVE_HEAD =  "⸻\n|   | \n|   ╽\n|  ---\n| |   |\n|  ---\n|\n|\n|\n|\n|\n|\n|\n|______".freeze
   FOUR_BODY =  "⸻\n|   | \n|   ╽\n|  ---\n| |   |\n|  ---\n|   |\n" \
-                "|   |   \n|   |   \n|   |\n|      \n|       \n|\n|______"
+               "|   |   \n|   |   \n|   |\n|      \n|       \n|\n|______".freeze
   THREE_ARM = "⸻\n|   | \n|   ╽\n|  ---\n| |   |\n|  ---\n|   |\n" \
-             "|  /|   \n| / |   \n|   |\n|      \n|       \n|\n|______"
+              "|  /|   \n| / |   \n|   |\n|      \n|       \n|\n|______".freeze
   TWO_ARMS = "⸻\n|   | \n|   ╽\n|  ---\n| |   |\n|  ---\n|   |\n" \
-              "|  /|\\ \n| / | \\\n|   |\n|      \n|       \n|\n|______"
+             "|  /|\\ \n| / | \\\n|   |\n|      \n|       \n|\n|______".freeze
   ONE_LEG = "⸻\n|   | \n|   ╽\n|  ---\n| |   |\n|  ---\n|   |\n" \
-            "|  /|\\ \n| / | \\\n|   |\n|  /   \n| /     \n|\n|______"
-  ZERO_LEGS =  "⸻\n|   | \n|   ╽\n|  ---\n| |   |\n|  ---\n|   |\n" \
-                "|  /|\\ \n| / | \\\n|   |\n|  / \\\n| /   \\\n|\n|______"
+            "|  /|\\ \n| / | \\\n|   |\n|  /   \n| /     \n|\n|______".freeze
+  ZERO_LEGS = "⸻\n|   | \n|   ╽\n|  ---\n| |   |\n|  ---\n|   |\n" \
+              "|  /|\\ \n| / | \\\n|   |\n|  / \\\n| /   \\\n|\n|______".freeze
 end
 
 class Word
   def initialize
-    @word = get_word
+    @word = fetch_word
   end
 
   attr_accessor :word
 
-  def get_word
+  def fetch_word
     words = File.readlines('google_10000_english.txt')
     array = []
     words.each do |line|
-      if line.length > 5 && line.length < 12
-        array.push(line)
-      end
+      array.push(line) if line.length > 5 && line.length < 12
     end
-    return array.sample
+    array.sample
   end
 end
 
@@ -95,6 +93,7 @@ class Game
     if @player.guess == 'exit'
        @guesses_remaining = 0
     elsif @player.guess == 'continue'
+      puts 'Please make a guess by entering a letter: '
       @player.guess = gets.chomp.downcase
       invalid_entry
     else
@@ -143,9 +142,7 @@ class Game
   end
 
   def save_game
-    File.open('saved.yaml', 'w') do |file|
-      file.puts YAML::dump(self)
-    end
+    File.open('saved.yaml', 'w') { |file| file.puts YAML::dump(self) }
     puts 'You\'ve successfully saved the game!'
     puts 'Please enter exit or continue: '
     @player.guess = gets.chomp.downcase
@@ -171,23 +168,21 @@ class Play
   end
 
   def self.load_saved
-    File.open('saved.yaml', 'r') do |obj|
-      game = YAML::load(obj)
-    end
+    File.open('saved.yaml', 'r') { |obj| YAML::load(obj) }
   end
 
   def self.win_status(player_guess, win_state, hidden)
     if player_guess == 'exit'
       puts "You've successfully exited the game. See you again soon! =) "
     else
-      win_state == true ? self.game_won : self.game_lost(hidden.join(' '))
+      win_state == true ? game_won : game_lost(hidden.join(' '))
     end
   end
 
   def self.game_won
     puts "\nCongratulations!\n "
     sleep 0.2
-    puts "YOU"
+    puts 'YOU'
     sleep 0.2
     puts "WIN\n "
   end

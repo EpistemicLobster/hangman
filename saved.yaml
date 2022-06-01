@@ -3,32 +3,17 @@ player: !ruby/object:Player
   player: player
   guess: save
   guesses:
-  - i
-  - m
-  - n
-  - o
-  - u
-  - p
+  - k
 hidden:
+- e
+- m
 - a
-- n
-- a
-- l
-- y
-- t
 - i
-- c
-- a
 - l
-guesses_remaining: 2
+guesses_remaining: 5
 board:
 - _
-- n
 - _
-- _
-- _
-- _
-- i
 - _
 - _
 - _
